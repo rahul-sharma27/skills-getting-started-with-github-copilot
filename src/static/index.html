@@ -46,5 +46,37 @@
     </footer>
 
     <script src="app.js"></script>
+    <script>
+      function renderActivities(activities) {
+        const activitiesList = document.getElementById("activities-list");
+        activitiesList.innerHTML = ""; // Clear existing content
+
+        for (const [activityName, activityDetails] of Object.entries(activities)) {
+          const activityCard = document.createElement("div");
+          activityCard.className = "activity-card";
+
+          activityCard.innerHTML = `
+            <h4>${activityName}</h4>
+            <p>${activityDetails.description}</p>
+            <p><strong>Schedule:</strong> ${activityDetails.schedule}</p>
+            <p><strong>Max Participants:</strong> ${activityDetails.max_participants}</p>
+            <div class="participants">
+              <h5>Participants:</h5>
+              <ul>
+                ${activityDetails.participants.map(participant => `<li>${participant}</li>`).join("")}
+              </ul>
+            </div>
+          `;
+
+          activitiesList.appendChild(activityCard);
+        }
+      }
+
+      // Fetch and render activities
+      fetch("/activities")
+        .then(response => response.json())
+        .then(data => renderActivities(data))
+        .catch(error => console.error("Error fetching activities:", error));
+    </script>
   </body>
 </html>
